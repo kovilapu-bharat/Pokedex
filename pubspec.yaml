@@ -1,0 +1,35 @@
+name: pokedex
+description: "A Flutter Pokédex app that fetches live data from PokéAPI and displays Pokémon in a clean, modern UI."
+publish_to: "none"
+
+version: 1.0.0+1
+
+environment:
+  sdk: ^3.5.2
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  cupertino_icons: ^1.0.8
+
+  # State management
+  flutter_riverpod: ^2.6.1
+
+  # HTTP client for PokéAPI
+  http: ^1.2.2
+
+  # Efficient image loading and caching
+  cached_network_image: ^3.4.1
+
+  # Local persistence for favourites
+  shared_preferences: ^2.3.3
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+  flutter_lints: ^4.0.0
+
+flutter:
+  uses-material-design: true
