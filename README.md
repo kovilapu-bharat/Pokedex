@@ -1,49 +1,36 @@
-# Pokédex Flutter App
+# Pokédex App
 
-A clean, modern Flutter mobile application that fetches live Pokémon data from [PokéAPI](https://pokeapi.co) and presents it across two screens with smooth animations, search, infinite scroll, favourites, and full dark mode support.
-
----
-
-## Features
-
-- **List Screen** — Searchable grid of Pokémon with sprite images, type badges, and ID numbers
-- **Detail Screen** — Full Pokémon info: sprite, ID, types, height, weight, animated stat bars, and abilities
-- **Search** — Filter Pokémon by name in real time
-- **Infinite Scroll** — Automatically loads the next 30 Pokémon as you scroll
-- **Pull-to-Refresh** — Swipe down to reload the list
-- **Favourites** — Heart icon to save favourites; persisted across app restarts
-- **Dark Mode** — Follows the device system theme automatically
-- **Hero Animations** — Smooth sprite transition between list and detail screens
-- **Error Handling** — User-friendly error messages with a Retry button on both screens
+A Flutter app that lets you browse Pokémon using the free [PokéAPI](https://pokeapi.co). Built as part of a technical assignment — two screens, live API data, and a few extra features I added along the way.
 
 ---
 
-## Getting Started
+## What it does
 
-### Prerequisites
+When you open the app you get a scrollable grid of Pokémon with their sprites and type badges. You can search by name, scroll down to load more, and tap any card to see the full detail page — stats, abilities, height, weight, everything. There's also a heart button to save your favourites, and it remembers them even after you close the app.
 
-- Flutter SDK installed ([flutter.dev](https://flutter.dev/docs/get-started/install))
-- An Android emulator, iOS simulator, or physical device connected
+It works in light and dark mode, follows your phone's system setting automatically.
 
-### Clone and Run
+---
+
+## How to run it
+
+You'll need Flutter installed. If you don't have it yet: https://flutter.dev/docs/get-started/install
 
 ```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/pokedex.git
-cd pokedex
+# Clone the repo
+git clone https://github.com/kovilapu-bharat/Pokedex.git
+cd Pokedex
 
-# 2. Install dependencies
+# Get dependencies
 flutter pub get
 
-# 3. Run the app
+# Run on your connected device or emulator
 flutter run
 ```
 
 ---
 
-## Flutter & Dart Version
-
-Run `flutter --version` to confirm. This project was built with:
+## Flutter version
 
 ```
 Flutter 3.24.2  •  channel stable  •  Dart 3.5.2  •  DevTools 2.37.2
@@ -51,54 +38,56 @@ Flutter 3.24.2  •  channel stable  •  Dart 3.5.2  •  DevTools 2.37.2
 
 ---
 
-## Third-Party Packages
+## Packages used
 
-| Package | Version | Purpose |
-|---|---|---|
-| `flutter_riverpod` | ^2.6.1 | State management — handles loading, success, and error states cleanly |
-| `http` | ^1.2.2 | HTTP GET requests to PokéAPI |
-| `cached_network_image` | ^3.4.1 | Efficient Pokémon sprite loading with in-memory and disk caching |
-| `shared_preferences` | ^2.3.3 | Persists favourite Pokémon IDs across app restarts |
+| Package | What it's for |
+|---|---|
+| `flutter_riverpod` | State management — handles loading, success, and error states |
+| `http` | Making GET requests to PokéAPI |
+| `cached_network_image` | Loading and caching Pokémon sprite images efficiently |
+| `shared_preferences` | Saving favourite Pokémon so they persist between sessions |
 
 ---
 
-## Project Structure
+## Project structure
 
 ```
 lib/
-├── main.dart                        # App entry point, ProviderScope, theme
+├── main.dart                      # Entry point, theme setup
 ├── models/
-│   ├── pokemon_list_item.dart       # List endpoint response models
-│   └── pokemon_detail.dart          # Detail endpoint response model
+│   ├── pokemon_list_item.dart     # Model for the list API response
+│   └── pokemon_detail.dart        # Model for the detail API response
 ├── services/
-│   └── pokemon_service.dart         # All HTTP calls to PokéAPI
+│   └── pokemon_service.dart       # All API calls live here
 ├── providers/
-│   ├── pokemon_providers.dart       # Riverpod providers for list + detail
-│   └── favourites_provider.dart     # Riverpod provider for favourites
+│   ├── pokemon_providers.dart     # Riverpod providers for list + detail
+│   └── favourites_provider.dart   # Favourites state + SharedPreferences
 ├── screens/
-│   ├── pokemon_list_screen.dart     # Screen 1: searchable grid
-│   └── pokemon_detail_screen.dart   # Screen 2: full Pokémon detail
+│   ├── pokemon_list_screen.dart   # Screen 1: the grid
+│   └── pokemon_detail_screen.dart # Screen 2: full detail
 └── widgets/
-    ├── pokemon_card.dart            # Grid card with sprite, name, types
-    ├── stat_bar.dart                # Animated progress bar for base stats
-    └── type_badge.dart              # Coloured pill badge for Pokémon types
+    ├── pokemon_card.dart           # The card shown in the grid
+    ├── stat_bar.dart               # Animated progress bar for stats
+    └── type_badge.dart             # Coloured type pill (Fire, Water, etc.)
 ```
 
 ---
 
-## Design Decisions
+## A few decisions I made
 
-- **Riverpod** was chosen for state management because `AsyncNotifierProvider` cleanly models the three required UI states (loading / success / error) with minimal boilerplate.
-- **Detail calls on list items**: The list endpoint only returns name and URL. A detail API call is made for each visible Pokémon to retrieve the sprite and types, as required by the assignment spec.
-- **Pagination**: The app fetches 30 Pokémon per page (matching the API default) and appends results as the user scrolls, without replacing existing data.
-- **Hero animations**: The sprite image is wrapped in a `Hero` widget so it transitions smoothly between the list card and the detail screen.
-- **Stat bar colours**: Bars are coloured red (low), orange (medium), or green (high) based on the stat value relative to the maximum possible (255), giving instant visual feedback.
+**Why Riverpod?** It models the three UI states (loading / success / error) cleanly without a lot of boilerplate. `AsyncNotifierProvider` was a natural fit for the list screen since it handles async state out of the box.
+
+**Detail calls on the list screen:** The list endpoint only gives you a name and a URL — no sprite, no types. So for each Pokémon shown in the grid, I make a separate detail call to get the image and type data. This is by design (and mentioned in the assignment spec).
+
+**Pagination:** Loads 30 at a time. When you scroll near the bottom it quietly fetches the next batch and appends it — no jarring reloads.
+
+**Stat bar colours:** Red for low, orange for medium, green for high — based on the value relative to 255 (the max possible). Makes it easy to see at a glance how strong a Pokémon is.
 
 ---
 
-## AI Tool Disclosure
+## Note on AI tools
 
-This project was developed with the assistance of **Google Gemini (Antigravity)**, an AI coding assistant. The AI helped generate the initial project structure, boilerplate code, and documentation. All code was reviewed and is understood by the developer.
+I used **Google Gemini (Antigravity)** as a coding assistant during development. It helped with initial structure and some boilerplate. I reviewed, understood, and tested all the code myself.
 
 ---
 
