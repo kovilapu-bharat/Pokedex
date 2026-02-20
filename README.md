@@ -29,8 +29,8 @@ A clean, modern Flutter mobile application that fetches live Pokémon data from 
 
 ```bash
 # 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/pokedex.git
-cd pokedex
+git clone https://github.com/kovilapu-bharat/Pokedex.git
+cd Pokedex
 
 # 2. Install dependencies
 flutter pub get
